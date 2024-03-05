@@ -1,0 +1,119 @@
+import java.awt.*;
+import java.swing.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+public Class GadgetShopGUI implements ActionListener
+{
+	private JFrame frame;
+	
+	private JLabel modelLabel;
+	private JLabel priceLabel;
+	private JLabel sizeLabel;
+	private JLabel weightLabel;
+
+	private JTextField modelTextbox;
+	private JTextField priceTextbox;
+	private JTextField modelTextbox;
+	private JTextField sizeTextbox;
+
+	private JLabel creditLabel;
+	private JLabel memoryLabel;
+
+	private JButton addMobileButton;
+	private JButton addMP3Button;
+
+	private JTextField creditTextbox;
+	private JTextField memoryTextbox;
+
+	ArrayList<Gadget> item = new ArrayList<Gadget>();
+
+
+	public GadgetShopGUI()
+	{
+		frame = new JFrame("CW GridLayout Example");
+		Container contentPane = frame.getContentPane();
+		
+		JLabel modelLabel = new JLabel("Model:");
+		JLabel priceLabel = new JLabel("Price:");
+		JLabel weightLabel = new JLabel("Weight:");
+		JLabel sizeLabel = new JLabel("Size:");
+
+		modelTextbox = new JTextField(10);
+		priceTextbox = new JTextField(10);
+		weightTextbox = new JTextField(10);
+		sizeTextbox = new JTextField(10);
+
+		creditLabel = new JLabel("Credit:");
+		memoryLabel = new JLabel("Memory:");
+		
+		creditTextbox = new JTextField(10);
+		memoryTextbox = new JTextField(10);
+
+		addMobileButton = new JButton("Add Mobile");
+		addMobileButton.addActionListener(this);
+
+		addMP3Button = new JButton("Add MP3");
+		addMP3Button.addActionListener(this);
+
+		contentPane.setLayout(new GridLayout(4,4));
+
+		contentPane.add(modelLabel);
+		contentPane.add(priceLabel);
+		contentPane.add(weightLabel);
+		contentPane.add(sizeLabel);
+
+		contentPane.add(modelTextbox);
+		contentPane.add(priceTextbox);
+		contentPane.add(weightTextbox);
+		contentPane.add(sizeTextbox);
+
+		contentPane.add(creditLabel);
+		contentPane.add(memoryLabel);
+		contentPane.add(addMobileButton);
+		contentPane.add(addMP3Button);
+
+		contentPane.add(creditTextbox);
+		contentPane.add(memoryTextbox);
+
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	public void actionPerformed(ActionEvent event)
+	{
+		String command = event.getActionCommand();
+		
+		if (event.getCommand.equals("Add Mobile"))
+		{
+			mobile newMobile = new Mobile(getModel(),getPrice(),getWeight(),getSize());
+
+			item.add(newMobile);
+			JOptionPane.showMessageDialog(frame, "A new Mobile is added");
+		}
+	}
+
+	public String getModel()
+	{
+		String aPrice = modelTextbox.getText();
+		return aPrice;
+	}
+
+	public double getPrice()
+	{
+		double aPrice = Double.parseDouble(priceTextbox.getText());
+		return aPrice;
+	}
+
+	public double getWeight()
+	{
+		double aWeight = Double.parseDouble(weightTextbox.getText());
+		return aWeight 
+	}
+
+	public String getSize()
+	{
+		String aSize = sizeTextbox.getText());
+		return aSize;
+	}
+}
