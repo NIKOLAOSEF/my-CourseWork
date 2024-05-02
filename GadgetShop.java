@@ -1,12 +1,17 @@
-//get library functions
+//This program implements a GUI with text boxes which the user can input values
+//and click on various buttons which simulate a gadget shop with mobile and MP3 gadgets respectively.
+//The user can add a mobile, add mp3, make a call, and even download music. All of which are being simulated
+//on a print screen
+
+//import libraries
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class GadgetShop implements ActionListener
+public class GadgetShop implements ActionListener //action listener needed for buttons to work
 {
-    //buttons
+    //declare labels
     private JLabel modelLabel;
     private JLabel priceLabel;
     private JLabel weightLabel;
@@ -18,7 +23,7 @@ public class GadgetShop implements ActionListener
     private JLabel downloadLabel;
     private JLabel displayNumberLabel;
     
-    //buttons
+    //declare buttons
     private JButton AddMobileBtn;
     private JButton AddMP3Btn;
     private JButton ClearBtn;
@@ -26,7 +31,7 @@ public class GadgetShop implements ActionListener
     private JButton MakeACallBtn;
     private JButton DownloadMusicBtn;
     
-    //textfields
+    //declare textfields
     private JTextField modelTextField;
     private JTextField priceTextField;
     private JTextField weightTextField;
@@ -41,9 +46,9 @@ public class GadgetShop implements ActionListener
     private JFrame frame;
     
     //array list of type "Gadget" to store gadgets
-    ArrayList<Gadget> gadgets = new ArrayList<>();
+    ArrayList<Gadget> item = new ArrayList<Gadget>();
     
-    //variables
+    //declare variables
     private String model;
     private double price;
     private int weight;
@@ -55,9 +60,16 @@ public class GadgetShop implements ActionListener
     private int displayNumber;
     private int downloadSize;
     
+    //the main method which runs first and creates an object of type "GadgetShop" (GUI)
+    public static void main(String[] args)
+    {
+        GadgetShop item = new GadgetShop();
+    }
+    
     public GadgetShop() //gui container
     {
-        frame = new JFrame("Gadget");
+        //create new frame with title "Gadget Shop"
+        frame = new JFrame("Gadget Shop");
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(new GridLayout(7,4)); //gridlayout (7 rows, 4 columns)
         
@@ -66,11 +78,11 @@ public class GadgetShop implements ActionListener
         priceLabel = new JLabel("Price:");
         weightLabel = new JLabel("Weight:");
         sizeLabel = new JLabel("Size:");
-        creditLabel = new JLabel("Credit:");
-        memoryLabel = new JLabel("Memory:");
+        creditLabel = new JLabel("Credit (Mobile):");
+        memoryLabel = new JLabel("Memory (MP3):");
         PhoneNoLabel = new JLabel("Phone No:");
-        durationLabel = new JLabel("Duration");
-        downloadLabel = new JLabel("Download");
+        durationLabel = new JLabel("Duration (Minutes):");
+        downloadLabel = new JLabel("Download (MB):");
         displayNumberLabel = new JLabel("Display Number:");
         
         //instantiate text fields of character limit "15"
@@ -84,10 +96,7 @@ public class GadgetShop implements ActionListener
         durationTextField = new JTextField(15);
         downloadSizeTextField = new JTextField(15);
         displayNumberTextField = new JTextField(15);
-        
-        //sets the text of display number to "-1"
-        displayNumberTextField.setText("-1");
-        
+    
         //instantiate buttons
         AddMobileBtn = new JButton("Add Mobile");
         AddMP3Btn = new JButton("Add MP3");
@@ -147,93 +156,108 @@ public class GadgetShop implements ActionListener
     public void actionPerformed(ActionEvent event)
     {
         String command = event.getActionCommand();
-        if (command.equals("Add Mobile")) 
-        {
-            //add mobile method requires the display number to be of positive value 
-            if (displayNumber == -1)
-            {
-                AddMobileMethod();
-                displayNumber = 1;
-            } else //if display number is positive: add 1 to it for every method call
-            {
-                AddMobileMethod();
-                displayNumber+=1;
+        
+        //if "Add Mobile" button pressed: check if display number is non-positive
+        //if it is: call the AddMobile method, and increment the display number by 1
+        //otherwise: do nothing
+        if (command.equals("Add Mobile")) {
+            if (displayNumber != -1) {
+               try {
+                    // retrieve variables
+                    String model = getModel();
+                    double price = getPrice();
+                    double weight = getWeight();
+                    String size = getSize();
+                    int credit = getCredit();
+                    int disNum = getDisplayNumber();
+                    
+                    // check if any required field is empty
+                    if (model.isEmpty() || Double.isNaN(price) || Double.isNaN(weight)
+                    || size.isEmpty() || credit == 0 || disNum == 0) {
+                        // do nothing
+                    } else {
+                        addMobile();
+                        displayNumber += 1;
+                    }
+                } catch (NumberFormatException ex) {
+                    //handle the error in case of exception
+                    JOptionPane.showMessageDialog(frame, "Please enter a valid number in text fields", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-            //convert the display number value to a string and
-            //set the display number text to the "display number value"
+    
             displayNumberTextField.setText(Integer.toString(displayNumber));
         }
-        if (command.equals("Add MP3"))
-        {
-            //add mp3 method requires the display number to be of positive value 
-            if (displayNumber == -1)
-            {
-                AddMP3Method();
-                displayNumber = 1;
-            } else //if display number is positive: add 1 to it for every method call
-            {
-                AddMP3Method();
-                displayNumber+=1;
+        
+        //if "Add MP3" button pressed: check if display number is non-positive
+        //if it is: call the AddMP3 method, and increment the display number by 1
+        //otherwise:  do nothing
+        if (command.equals("Add MP3")) {
+            if (displayNumber != -1) {
+                try {
+                    // retrieve variables
+                    String model = getModel();
+                    double price = getPrice();
+                    double weight = getWeight();
+                    String size = getSize();
+                    int memory = getMemory();
+                    int disNum = getDisplayNumber();
+                    
+                    // check if any required field is empty
+                    if (model.isEmpty() || Double.isNaN(price) || Double.isNaN(weight)
+                    || size.isEmpty() || memory == 0 || disNum == 0) {
+                        // do nothing
+                    } else {
+                        addMP3();
+                        displayNumber += 1;
+                    }
+                } catch (NumberFormatException ex) {
+                    //handle the error in case of exception
+                    JOptionPane.showMessageDialog(frame, "Please enter a valid number in text fields", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-            //convert the display number value to a string and
-            //set the display number text to the "display number value"
+    
             displayNumberTextField.setText(Integer.toString(displayNumber));
         }
-        if (command.equals("Clear")) //when clear button pressed:
-                                     //clear all text fields (empty text) 
-                                     //and reset the
-                                     //display number text to "-1"
+        
+        //when "Clear" button pressed:
+        //call the clear method
+        if (command.equals("Clear")) 
         {
             clear();
         }
         
-        //this method displays the details ( variables ) for each gadget in
-        //the array list "Gadgets"
+        //when "Display All" button clicked:
+        //call the DisplayAll method
         if (command.equals("Display All")) {
-            if (displayNumber < 1)
-            {
-                //message that shows if display number non-positive
-                JOptionPane.showMessageDialog(frame,"Please enter a valid number");
-            } else if (displayNumber != (int)displayNumber)
-            {
-                //message that shows if display number not an integer
-                JOptionPane.showMessageDialog(frame,"Please enter an integer");
-            } else 
-            {
-                //shows the display number value and
-                //calls the display all method
-                getDisplayNumber();
-                DisplayAllMethod();
-            }
+            displayAll();
         }
         
-        //calls the call method
+        //calls the makeACall method
         if (command.equals("Make A Call")) {
-            MakeACallMethod();
+            makeCall();
         }
         
-        //calls the download music method
+        //calls the downloadMusic method
         if (command.equals("Download Music")) {
-            DownloadMusicMethod();
+            downloadMusic();
         }
-
     }
     
-    //this method adds a gadget of type "Mobile" to the gadgets array list
-    public void AddMobileMethod()
+    //this method adds a mobile to gadgets array list if the required text fields are filled properly
+    public void addMobile()
     {
         model = getModel();
         price = getPrice();
         weight = getWeight();
         size = getSize();
         credit = getCredit();
-        
-        Mobile gadget = new Mobile(model, price, weight, size, credit);
-        gadgets.add(gadget);
+
+        Mobile gadget = new Mobile(model, price, weight, size, displayNumber, credit);
+        item.add(gadget);
     }
     
-    //this method adds a gadget of type "MP3" to the gadgets array list
-    public void AddMP3Method()
+    //this method adds a mp3 to gadgets array list if the required text fields are filled properly
+    public void addMP3()
     {
         model = getModel();
         price = getPrice();
@@ -241,16 +265,16 @@ public class GadgetShop implements ActionListener
         size = getSize();
         memory = getMemory();
         
-        MP3 gadget = new MP3(model, price, weight, size, memory);
-        gadgets.add(gadget);
+        MP3 gadget = new MP3(model, price, weight, size, displayNumber, memory);
+        item.add(gadget);
     }
     
     //this method prints a screen of every variable of a gadget
     //for every gadget in the gadgets array list
-    public void DisplayAllMethod()
+    public void displayAll()
     {
-        for (Gadget gadget : gadgets)
-        {
+        for (Gadget gadget : item) {
+            System.out.println("Display Number: " + (gadget.getDisplayNumber() + 1));
             System.out.println("Model: " + gadget.getModel());
             System.out.println("Price: " + gadget.getPrice());
             System.out.println("Weight: " + gadget.getWeight());
@@ -261,34 +285,49 @@ public class GadgetShop implements ActionListener
     //this method takes the specified variables (displayNumber, phoneNumber, duration)
     //and invokes the "makeCall" method in the mobile class from this class
     //based on the variable names given
-    public void MakeACallMethod()
+    public void makeCall()
     {
-        displayNumber = getDisplayNumber();
-        phoneNumber = getPhoneNumber();
-        duration = getDuration();
-        
-        if (displayNumber != 1)
-        {
-            //wip
-            gadgets.get(displayNumber).makeCall(phoneNumber, duration);
+        if (item.size() <= 0) {
+            JOptionPane.showMessageDialog(frame, "Add a mobile first");
+        } else {
+            try {
+                Gadget gadget = item.get(getDisplayNumber());
+                if (getDisplayNumber() != -1 && gadget instanceof Mobile) {
+                    Mobile mobile = (Mobile) item.get(getDisplayNumber());
+                    mobile.setCall(getPhoneNumber(),getDuration());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "This item is not a Mobile");
+                }
+            } catch (IndexOutOfBoundsException exception)
+            {
+                //display appropriate error dialog
+            }
         }
     }
     
     //this method takes the inputs of display number and download size text fields
     //and invokes the download music method in the MP3 class from this class
-    public void DownloadMusicMethod()
+    public void downloadMusic()
     {
-        displayNumber = getDisplayNumber();
-        downloadSize = getDownloadSize();
-        
-        if (displayNumber != -1)
-        {
-            gadgets.get(displayNumber).downloadMusic(phoneNumber, duration);
+        if (item.size() <= 0) {
+            JOptionPane.showMessageDialog(frame, "Add a MP3 first");
+        } else {
+            try {
+                Gadget gadget = item.get(getDisplayNumber());
+                if (getDisplayNumber() != -1 && gadget instanceof MP3) {
+                    MP3 mp3 = (MP3) item.get(getDisplayNumber());
+                    mp3.downloadMusic(getDownloadSize());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "This item is not a MP3");
+                }
+            } catch (IndexOutOfBoundsException exception)
+            {
+                //display appropriate error dialog
+            }
         }
     }
     
-    //this method makes every text field, and resets the display number text
-    //to "-1"
+    //this method makes every text field empty
     public void clear()
     {
         modelTextField.setText("");
@@ -300,102 +339,226 @@ public class GadgetShop implements ActionListener
         phoneNoTextField.setText("");
         durationTextField.setText("");
         downloadSizeTextField.setText("");
-        displayNumberTextField.setText("-1");
+        displayNumberTextField.setText("");
     }
     
-    //get the model from the model text field 
+    
+    
+    //get model method
     public String getModel()
     {
         String modelInputText = modelTextField.getText();
+        try {
+            if (modelInputText.equals("")) {
+                JOptionPane.showMessageDialog(frame, "Model text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!(modelInputText instanceof String)) {
+                JOptionPane.showMessageDialog(frame, "Model must be a string", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException exception)
+        {
+            JOptionPane.showMessageDialog(frame, "Model text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         return modelInputText;
     }
     
-    //create a variable
-    //convert the price text field to type "double"
-    //initialise the temporary variable to price text field
-    //return the value of this temporary variable
+    //get price method
     public double getPrice()
     {
-        double priceInputText = Double.parseDouble(priceTextField.getText());
-        return priceInputText;
+        //get the text field and make it a variable
+        String priceInputText = priceTextField.getText();
+    
+        // check if priceInputText is empty
+        if (priceInputText.isEmpty()) {
+            //display an error message
+            JOptionPane.showMessageDialog(frame, "Price text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0.0;
+        }
+        
+        try {
+            //attempt to return the correct value
+            return Double.parseDouble(priceInputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Price must be a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0.0;
+        }
     }
     
-    //create a variable
-    //convert the weight text field to type "integer"
-    //initialise the temporary variable to weight text field
-    //return the value of this temporary variable
+    //get weight method
     public int getWeight()
     {
-        int weightInputText = Integer.parseInt(weightTextField.getText());
-        return weightInputText;
+        //get the text field and make it a variable
+        String weightInputText = weightTextField.getText();
+    
+        // check if priceInputText is empty
+        if (weightInputText.isEmpty()) {
+            //display an error message
+            JOptionPane.showMessageDialog(frame, "Weight text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
+        
+        try {
+            //attempt to return the correct value
+            return Integer.parseInt(weightInputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Weight must be a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
     }
     
-    //create a variable
-    //initialise the temporary variable to size text field
-    //return the value of this temporary variable
+    //get size method
     public String getSize()
     {
         String sizeInputText = sizeTextField.getText();
+        try {
+            if (sizeInputText.equals("")) {
+                JOptionPane.showMessageDialog(frame, "Size text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException exception)
+        {
+            JOptionPane.showMessageDialog(frame, "Size text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         return sizeInputText;
     }
     
-    //create a variable
-    //convert the credit text field to type "integer"
-    //initialise the temporary variable to credit text field
-    //return the value of this temporary variable
+    //get credit method
     public int getCredit()
     {
-        int creditInputText = Integer.parseInt(creditTextField.getText());
-        return creditInputText;
+        //get the text field and make it a variable
+        String creditInputText = creditTextField.getText();
+    
+        // check if priceInputText is empty
+        if (creditInputText.isEmpty()) {
+            //display an error message
+            JOptionPane.showMessageDialog(frame, "Credit text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
+        
+        try {
+            //attempt to return the correct value
+            return Integer.parseInt(creditInputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Credit must be a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
     }
     
-    //create a variable
-    //convert the memory text field to type "integer"
-    //initialise the temporary variable to memory text field
-    //return the value of this temporary variable
+    //get memory method
     public int getMemory()
     {
-        int memoryInputText = Integer.parseInt(memoryTextField.getText());
-        return memoryInputText;
+        //get the text field and make it a variable
+        String memoryInputText = memoryTextField.getText();
+    
+        // check if priceInputText is empty
+        if (memoryInputText.isEmpty()) {
+            //display an error message
+            JOptionPane.showMessageDialog(frame, "Memory text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
+        
+        try {
+            //attempt to return the correct value
+            return Integer.parseInt(memoryInputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Memory must be a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
     }
     
-    //create a variable
-    //convert the display number text field to type "integer"
-    //initialise the temporary variable to display number text field
-    //return the value of this temporary variable
-    public int getDisplayNumber()
-    {
-        int displayNumberInputText = Integer.parseInt(displayNumberTextField.getText());
-        return displayNumberInputText;
-    }
-    
-    //create a variable
-    //convert the phone number text field to type "integer"
-    //initialise the temporary variable to phone number text field
-    //return the value of this temporary variable
+    //get phone number method
     public int getPhoneNumber()
     {
-        int phoneNumberInputText = Integer.parseInt(phoneNoTextField.getText());
-        return phoneNumberInputText;
+        //get the text field and make it a variable
+        String phoneNumberInputText = phoneNoTextField.getText();
+    
+        // check if priceInputText is empty
+        if (phoneNumberInputText.isEmpty()) {
+            //display an error message
+            JOptionPane.showMessageDialog(frame, "Phone number text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
+        
+        try {
+            //attempt to return the correct value
+            return Integer.parseInt(phoneNumberInputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Phone number must be a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
     }
     
-   //create a variable
-    //convert the duration text field to type "integer"
-    //initialise the temporary variable to duration text field
-    //return the value of this temporary variable
+    //get duration method
     public int getDuration()
     {
-        int durationInputText = Integer.parseInt(durationTextField.getText());
-        return durationInputText;
+        //get the text field and make it a variable
+        String durationInputText = durationTextField.getText();
+    
+        // check if priceInputText is empty
+        if (durationInputText.isEmpty()) {
+            //display an error message
+            JOptionPane.showMessageDialog(frame, "Duration text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
+        
+        try {
+            //attempt to return the correct value
+            return Integer.parseInt(durationInputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "Duration must be a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
     }
     
-    //create a variable
-    //convert the duration text field to type "integer"
-    //initialise the temporary variable to duration text field
-    //return the value of this temporary variable
+    //get download size method
     public int getDownloadSize()
     {
-        int downloadSizeInputText = Integer.parseInt(downloadSizeTextField.getText());
-        return downloadSizeInputText;
+        //get the text field and make it a variable
+        String downloadSizeInputText = downloadSizeTextField.getText();
+    
+        // check if priceInputText is empty
+        if (downloadSizeInputText.isEmpty()) {
+            //display an error message
+            JOptionPane.showMessageDialog(frame, "Download size text cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
+        
+        try {
+            //attempt to return the correct value
+            return Integer.parseInt(downloadSizeInputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "DownloadSize must be a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+            // return a default value in case of error
+            return 0;
+        }
+    }
+    
+    //get display number method
+    public int getDisplayNumber()
+    {
+        int displayNumber = -1;
+        
+        try {
+            displayNumber = Integer.parseInt(displayNumberTextField.getText());
+            
+            if (displayNumber < 0 || displayNumber >= item.size()) {
+                JOptionPane.showMessageDialog(frame, "Display number is not within the correct range", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException exception)
+        {
+            JOptionPane.showMessageDialog(frame, "Display number must be an integer", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return displayNumber;
     }
 }
